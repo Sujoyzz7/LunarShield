@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-slate-950 text-slate-100 antialiased;
+}
+
+/* Range inputs use the accent colour; keep them compact and consistent. */
+input[type='range'] {
+  @apply accent-indigo-500;
+}
+
+/* Focus rings that work for keyboard users without cluttering mouse users. */
+:focus-visible {
+  outline: 2px solid theme('colors.indigo.400');
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
