@@ -1,3 +1,4 @@
+/* eslint-env node */
 /**
  * LunarShield icon generator.
  *
