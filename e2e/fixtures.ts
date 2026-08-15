@@ -1,6 +1,8 @@
 import { test as base, chromium, type BrowserContext } from '@playwright/test'
 import path from 'node:path'
 
+/* eslint-disable react-hooks/rules-of-hooks */
+
 /**
  * Playwright fixture that loads the built extension.
  * - Uses a persistent context (extensions only work there).
@@ -8,7 +10,7 @@ import path from 'node:path'
  * - The extension ID is dynamic, so we read it from the service worker URL.
  */
 export const test = base.extend<{ context: BrowserContext; extensionId: string }>({
-  context: async ({}, use) => {
+  context: async (_, use) => {
     const pathToExtension = path.join(__dirname, '..', 'dist')
     const context = await chromium.launchPersistentContext('', {
       channel: 'chromium',
@@ -22,13 +24,13 @@ export const test = base.extend<{ context: BrowserContext; extensionId: string }
     await context.close()
   },
 
-  extensionId: async ({ context }, use) => {
+  extensionId: async ({ context }, useExtensionId) => {
     let [worker] = context.serviceWorkers()
     if (!worker) {
       worker = await context.waitForEvent('serviceworker')
     }
     const extensionId = new URL(worker.url()).host
-    await use(extensionId)
+    await useExtensionId(extensionId)
   },
 })
 

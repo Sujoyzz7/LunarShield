@@ -28,6 +28,7 @@ function darkDocument(): Document {
 describe('quickDarkSignal', () => {
   it('detects declared dark color schemes', () => {
     document.body.innerHTML = ''
+    document.head.innerHTML = ''
     const meta = document.createElement('meta')
     meta.name = 'color-scheme'
     meta.content = 'dark'
