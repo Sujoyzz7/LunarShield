@@ -1,3 +1,4 @@
+/* global console */
 import { createServer } from 'node:http'
 import { readFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'

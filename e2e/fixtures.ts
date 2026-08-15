@@ -8,7 +8,7 @@ import path from 'node:path'
  * - The extension ID is dynamic, so we read it from the service worker URL.
  */
 export const test = base.extend<{ context: BrowserContext; extensionId: string }>({
-  context: async ({}, use) => {
+  context: async (_, use) => {
     const pathToExtension = path.join(__dirname, '..', 'dist')
     const context = await chromium.launchPersistentContext('', {
       channel: 'chromium',

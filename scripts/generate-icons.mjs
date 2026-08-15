@@ -1,4 +1,4 @@
-/* eslint-env node */
+/* global Buffer, console */
 /**
  * LunarShield icon generator.
  *
@@ -74,7 +74,7 @@ const lerp = (a, b, t) => a + (b - a) * t
 const clamp01 = (v) => Math.min(1, Math.max(0, v))
 
 /** Hex (#rrggbb) -> [r,g,b] in 0..1 */
-function hex( h) {
+function hex(h) {
   return [
     parseInt(h.slice(1, 3), 16) / 255,
     parseInt(h.slice(3, 5), 16) / 255,

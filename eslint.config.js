@@ -24,6 +24,18 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-non-null-assertion': 'off',
+      'no-empty': ['error', { allowEmptyCatch: true }],
+    },
+  },
+  // Node.js script files (.mjs, .js in scripts/)
+  {
+    files: ['scripts/**/*.{mjs,js}', 'e2e/**/*.mjs'],
+    languageOptions: {
+      globals: {
+        Buffer: 'readonly',
+        console: 'readonly',
+        process: 'readonly',
+      },
     },
   },
 )
