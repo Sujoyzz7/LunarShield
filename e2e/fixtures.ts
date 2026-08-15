@@ -1,6 +1,8 @@
 import { test as base, chromium, type BrowserContext } from '@playwright/test'
 import path from 'node:path'
 
+/* eslint-disable react-hooks/rules-of-hooks */
+
 /**
  * Playwright fixture that loads the built extension.
  * - Uses a persistent context (extensions only work there).
