@@ -1,4 +1,3 @@
-/* global Buffer, console */
 /**
  * LunarShield icon generator.
  *

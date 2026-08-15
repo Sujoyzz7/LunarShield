@@ -22,13 +22,13 @@ export const test = base.extend<{ context: BrowserContext; extensionId: string }
     await context.close()
   },
 
-  extensionId: async ({ context }, use) => {
+  extensionId: async ({ context }, useExtensionId) => {
     let [worker] = context.serviceWorkers()
     if (!worker) {
       worker = await context.waitForEvent('serviceworker')
     }
     const extensionId = new URL(worker.url()).host
-    await use(extensionId)
+    await useExtensionId(extensionId)
   },
 })
 
