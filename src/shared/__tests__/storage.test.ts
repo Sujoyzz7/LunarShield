@@ -55,7 +55,7 @@ describe('sanitizeRules', () => {
     const rules = sanitizeRules([
       { id: '1', pattern: 'a.com', action: 'disable' },
       { id: '1', pattern: 'b.com', action: 'disable' },
-      { id: '2', pattern: 'not-valid', action: 'disable' },
+      { id: '2', pattern: 'http://not-valid', action: 'disable' },
       'junk',
     ])
     expect(rules).toHaveLength(1)

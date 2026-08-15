@@ -8,6 +8,10 @@ import {
 } from '../schedule'
 import type { Schedule } from '../types'
 
+// Solar times are computed in the machine's local timezone, so pin the zone to
+// keep the assertions deterministic on any dev machine or CI runner.
+process.env.TZ = 'UTC'
+
 const at = (date: string) => new Date(date)
 
 describe('minutesInDay', () => {

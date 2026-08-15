@@ -62,6 +62,11 @@ export function quickDarkSignal(doc: Document): boolean | null {
   if (declared.includes('color-scheme') && (declared.includes('dark') || declared.includes('only light'))) {
     return declared.includes('dark')
   }
+  // `meta[name="color-scheme"]` carries its value in the content attribute,
+  // so check it directly (e.g. content="dark" or content="only light").
+  if (meta && (meta.includes('dark') || meta.includes('only light'))) {
+    return meta.includes('dark')
+  }
   if (typeof window.matchMedia === 'function') {
     const prefers = window.matchMedia('(prefers-color-scheme: dark)')
     if (prefers.matches) return true
