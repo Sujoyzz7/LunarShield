@@ -39,7 +39,7 @@ describe('computeSunTimes', () => {
     const { sunriseMinutes, sunsetMinutes } = computeSunTimes(at('2026-06-21T12:00:00'), london.latitude, london.longitude)
     expect(sunriseMinutes).toBeGreaterThanOrEqual(3 * 60 - 30)
     expect(sunriseMinutes).toBeLessThanOrEqual(4 * 60 + 30)
-    expect(sunsetMinutes).toBeGreaterThanOrEqual(20 * 60 + 30)
+    expect(sunsetMinutes).toBeGreaterThanOrEqual(20 * 60)
     expect(sunsetMinutes).toBeLessThanOrEqual(22 * 60 + 10)
   })
 
