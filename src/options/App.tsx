@@ -4,12 +4,20 @@ import { GeneralPanel } from './components/GeneralPanel'
 import { RulesPanel } from './components/RulesPanel'
 import { SchedulePanel } from './components/SchedulePanel'
 import { ShortcutsPanel } from './components/ShortcutsPanel'
+import { StudioPanel } from './components/StudioPanel'
+import { ReadingPanel } from './components/ReadingPanel'
+import { CompatibilityPanel } from './components/CompatibilityPanel'
+import { DiagnosticsPanel } from './components/DiagnosticsPanel'
 import { useOptionsStore, type TabId } from './store'
 
 const TABS: ReadonlyArray<{ id: TabId; label: string }> = [
   { id: 'general', label: 'General' },
+  { id: 'studio', label: '🎨 Theme Studio' },
+  { id: 'reading', label: '📖 Reading Mode' },
   { id: 'rules', label: 'Per-site rules' },
   { id: 'schedule', label: 'Schedule' },
+  { id: 'compatibility', label: '🧩 Compatibility' },
+  { id: 'diagnostics', label: '⚡ Stats & Privacy' },
   { id: 'data', label: 'Data' },
   { id: 'help', label: 'Shortcuts & help' },
 ]
@@ -82,6 +90,12 @@ export default function App() {
               notice={notice}
             />
           )}
+          {tab === 'studio' && (
+            <StudioPanel settings={settings} patchSettings={(patch) => void patchSettings(patch)} />
+          )}
+          {tab === 'reading' && (
+            <ReadingPanel settings={settings} patchSettings={(patch) => void patchSettings(patch)} />
+          )}
           {tab === 'rules' && (
             <RulesPanel rules={rules} addRule={addRule} updateRule={updateRule} deleteRule={deleteRule} />
           )}
@@ -90,6 +104,10 @@ export default function App() {
               schedule={settings.schedule}
               onChange={(schedule) => void patchSettings({ schedule })}
             />
+          )}
+          {tab === 'compatibility' && <CompatibilityPanel />}
+          {tab === 'diagnostics' && (
+            <DiagnosticsPanel settings={settings} patchSettings={(patch) => void patchSettings(patch)} />
           )}
           {tab === 'data' && <DataPanel exportToFile={exportToFile} copyExport={copyExport} importFromText={importFromText} />}
           {tab === 'help' && <ShortcutsPanel />}

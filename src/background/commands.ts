@@ -21,7 +21,11 @@ async function handleCommand(command: string): Promise<void> {
       const idx = MODE_ORDER.indexOf(settings.mode)
       const next = MODE_ORDER[(idx + 1) % MODE_ORDER.length]
       if (!next) break
-      await writeSettings({ mode: next, ...MODE_PRESETS[next].params })
+      if (next === 'custom') {
+        await writeSettings({ mode: next })
+      } else {
+        await writeSettings({ mode: next, ...MODE_PRESETS[next].params })
+      }
       break
     }
     case 'toggle-schedule': {

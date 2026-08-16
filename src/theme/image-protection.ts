@@ -82,25 +82,30 @@ export class ImageProtection {
     this.pending = []
   }
 
-  /** Register newly added images (called from the engine's observer). */
+  /** Register newly added images and media elements (called from the engine's observer). */
   scan(root: Document | ShadowRoot | Element): void {
-    const images = Array.from(root.querySelectorAll<HTMLImageElement>('img'))
-    for (const img of images) this.watch(img)
+    const media = Array.from(root.querySelectorAll<HTMLElement>('img, picture, svg, video, canvas, iframe'))
+    for (const el of media) this.watch(el)
   }
 
-  private watch(img: HTMLImageElement): void {
-    if (this.processed.has(img) || !this.observer) return
-    if (img.closest('picture')?.querySelector('source[type="image/svg+xml"]')) return
-    this.processed.add(img)
-    this.observer.observe(img)
+  private watch(el: HTMLElement): void {
+    if (this.processed.has(el as unknown as HTMLImageElement) || !this.observer) return
+    this.processed.add(el as unknown as HTMLImageElement)
+    this.observer.observe(el)
   }
 
-  private async classify(img: HTMLImageElement): Promise<void> {
-    if (img.classList.contains(CLASSES.skipInvert)) return
-    // Never fight an author-supplied filter.
-    const style = img.getAttribute('style') ?? ''
+  private async classify(el: HTMLElement): Promise<void> {
+    if (el.classList.contains(CLASSES.skipInvert)) return
+    const style = el.getAttribute('style') ?? ''
     if (style.includes('filter:')) return
 
+    if (el.tagName.toLowerCase() !== 'img') {
+      // For svg, video, canvas, iframe, picture: protect directly if non-dark element
+      el.classList.add(CLASSES.skipInvert)
+      return
+    }
+
+    const img = el as HTMLImageElement
     const id = ++this.rpcId
     const promise = (async () => {
       const luminance = await this.sampler(img)

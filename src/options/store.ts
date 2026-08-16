@@ -4,7 +4,7 @@ import { rpc } from '../shared/messages'
 import type { ImportResult, Mode, RuleAction, Settings, SiteRule, Strategy } from '../shared/types'
 import { MODE_PRESETS } from '../shared/constants'
 
-export type TabId = 'general' | 'rules' | 'schedule' | 'data' | 'help'
+export type TabId = 'general' | 'studio' | 'reading' | 'rules' | 'schedule' | 'compatibility' | 'diagnostics' | 'data' | 'help'
 
 export interface RuleDraft {
   pattern: string
@@ -81,7 +81,11 @@ export const useOptionsStore = create<OptionsStore>((set) => ({
   },
 
   async setMode(mode: Mode) {
-    await this.patchSettings({ mode, ...MODE_PRESETS[mode].params })
+    if (mode === 'custom') {
+      await this.patchSettings({ mode })
+    } else {
+      await this.patchSettings({ mode, ...MODE_PRESETS[mode].params })
+    }
   },
 
   async resetSettings() {

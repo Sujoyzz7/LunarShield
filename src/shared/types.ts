@@ -8,7 +8,19 @@
 export type Strategy = 'filter' | 'css'
 
 /** Theme mode presets. */
-export type Mode = 'dark' | 'night' | 'oled'
+export type Mode = 'dark' | 'night' | 'oled' | 'custom'
+
+/** Image Protection modes. */
+export type ImageProtectionMode = 'always' | 'smart' | 'never'
+
+/** Performance mode levels. */
+export type PerformanceMode = 'max-compatibility' | 'balanced' | 'max-performance'
+
+/** Display profile presets. */
+export type DisplayProfile = 'laptop' | 'ips' | 'night' | 'day'
+
+/** Page detection classification. */
+export type PageThemeType = 'light' | 'dark' | 'mixed'
 
 /** Adjustable rendering parameters (driven by mode presets + user sliders). */
 export interface FilterParams {
@@ -22,32 +34,95 @@ export interface FilterParams {
   sepia: number
 }
 
-export type ScheduleMode = 'fixed' | 'sun'
+export interface CustomThemeColors {
+  background: string
+  surface: string
+  text: string
+  mutedText: string
+  accent: string
+}
+
+export interface CustomTheme {
+  id: string
+  name: string
+  colors: CustomThemeColors
+  params: FilterParams
+}
+
+export interface ScheduleKeyframe {
+  timeMinutes: number // 0..1439
+  temperature: number
+  brightness: number
+}
+
+export type ScheduleMode = 'fixed' | 'sun' | 'keyframes'
 
 export interface Schedule {
   enabled: boolean
   mode: ScheduleMode
-  /** Minutes since local midnight when the theme turns on (fixed mode). */
   startMinutes: number
-  /** Minutes since local midnight when the theme turns off (fixed mode). */
   endMinutes: number
-  /** Coordinates used for the approximate sunrise/sunset calculation (sun mode). */
   latitude: number
   longitude: number
+  keyframes: ScheduleKeyframe[]
+  weekdayScheduleEnabled: boolean
+  weekendScheduleEnabled: boolean
+  weekdayStartMinutes: number
+  weekdayEndMinutes: number
+  weekendStartMinutes: number
+  weekendEndMinutes: number
+}
+
+export interface ReadingModeConfig {
+  enabled: boolean
+  fontSize: number // in px (e.g., 18)
+  fontFamily: string
+  lineHeight: number // e.g., 1.6
+  maxWidth: number // in px (e.g., 720)
+  paragraphSpacing: number // in em (e.g., 1.2)
+  removeAds: boolean
+  hideSidebars: boolean
+  hideRecommendations: boolean
+  reduceAnimations: boolean
+}
+
+export interface PerformanceConfig {
+  mode: PerformanceMode
+  domScanDebounceMs: number
+  reduceObservers: boolean
+  disableExpensiveDetection: boolean
 }
 
 export interface Settings extends FilterParams {
   schemaVersion: number
   /** Master toggle. */
   enabled: boolean
+  /** Smart Auto Theme mode toggle. */
+  smartMode: boolean
   /** Active theme mode. */
   mode: Mode
   /** Active rendering strategy. */
   strategy: Strategy
+  /** Selected custom theme ID if mode === 'custom'. */
+  activeCustomThemeId?: string
   /** Apply the theme inside same-origin iframes. */
   applyToIframes: boolean
   /** Counter-invert images/video under the filter strategy. */
   imageProtection: boolean
+  imageProtectionMode: ImageProtectionMode
+  /** Protect specific media types. */
+  protectMediaTypes: {
+    img: boolean
+    picture: boolean
+    bgImage: boolean
+    svg: boolean
+    canvas: boolean
+    video: boolean
+    iframeVideo: boolean
+    gif: boolean
+    webp: boolean
+    avif: boolean
+  }
   /** Skip sites that already appear dark (on-device detection). */
   autoDetect: boolean
   /** Animate theme transitions. */
@@ -55,6 +130,11 @@ export interface Settings extends FilterParams {
   /** Respect the user's reduced-motion preference. */
   reducedMotion: boolean
   schedule: Schedule
+  readingMode: ReadingModeConfig
+  displayProfile: DisplayProfile
+  performance: PerformanceConfig
+  syncSettingsEnabled: boolean
+  developerDebugMode: boolean
 }
 
 export type RuleAction = 'enable' | 'disable'
@@ -62,18 +142,44 @@ export type RuleAction = 'enable' | 'disable'
 export interface SiteRule {
   id: string
   /**
-   * Hostname pattern. `example.com` matches the apex and all subdomains;
-   * `*.example.com` matches subdomains only.
+   * Hostname or path pattern.
+   * `example.com` matches the apex and subdomains.
+   * `github.com/issues/*` matches specific URL paths.
    */
   pattern: string
   enabled: boolean
   /** `disable` turns the theme off on this site, `enable` forces it on. */
   action: RuleAction
-  /** Optional strategy override for this site (inherit when undefined). */
+  /** Optional strategy override for this site. */
   strategy?: Strategy
-  /** Optional mode override for this site (inherit when undefined). */
+  /** Optional mode override for this site. */
   mode?: Mode
+  brightness?: number
+  contrast?: number
+  temperature?: number
+  imageProtection?: boolean
+  imageProtectionMode?: ImageProtectionMode
+  readingModeEnabled?: boolean
+  customCss?: string
   createdAt: number
+}
+
+export interface LocalStats {
+  darkModeTimeMinutes: number
+  sitesProtectedCount: number
+  imagesProtectedCount: number
+  nightModeTimeMinutes: number
+  oledModeTimeMinutes: number
+  lastUpdated: number
+}
+
+export interface CompatibilitySiteFix {
+  domain: string
+  status: 'supported' | 'partial' | 'unsupported'
+  note: string
+  recommendedStrategy?: Strategy
+  recommendedMode?: Mode
+  disableImageProtection?: boolean
 }
 
 export interface AnalysisResult {

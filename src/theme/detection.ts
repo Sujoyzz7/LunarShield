@@ -119,5 +119,9 @@ export function analyzeDocument(doc: Document, host: string): AnalysisResult {
   const confidence = Math.min(1, (total + (quick === null ? 0 : 1) + (pageBg ? 1 : 0)) / 6)
   const isDarkSite = score > 0.62 && confidence > 0.2
 
+  if (dark > 0 && light > 0 && Math.abs(dark - light) / total < 0.4) {
+    signals.push('mixed page theme detected (has both significant dark & light areas)')
+  }
+
   return { host, score: Math.round(score * 100) / 100, isDarkSite, confidence: Math.round(confidence * 100) / 100, signals }
 }

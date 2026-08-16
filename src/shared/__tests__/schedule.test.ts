@@ -73,6 +73,13 @@ describe('isNightNow', () => {
       endMinutes: 60,
       latitude: 0,
       longitude: 0,
+      keyframes: [],
+      weekdayScheduleEnabled: false,
+      weekendScheduleEnabled: false,
+      weekdayStartMinutes: 0,
+      weekdayEndMinutes: 0,
+      weekendStartMinutes: 0,
+      weekendEndMinutes: 0,
     }
     expect(isNightNow(at('2024-01-01T12:00:00'), schedule)).toBe(true)
   })
@@ -85,6 +92,13 @@ describe('isNightNow', () => {
       endMinutes: 7 * 60,
       latitude: 0,
       longitude: 0,
+      keyframes: [],
+      weekdayScheduleEnabled: false,
+      weekendScheduleEnabled: false,
+      weekdayStartMinutes: 0,
+      weekdayEndMinutes: 0,
+      weekendStartMinutes: 0,
+      weekendEndMinutes: 0,
     }
     expect(isNightNow(at('2024-01-01T23:30:00'), schedule)).toBe(true)
     expect(isNightNow(at('2024-01-01T03:00:00'), schedule)).toBe(true)
@@ -99,6 +113,13 @@ describe('isNightNow', () => {
       endMinutes: 0,
       latitude: 51.5074,
       longitude: -0.1278,
+      keyframes: [],
+      weekdayScheduleEnabled: false,
+      weekendScheduleEnabled: false,
+      weekdayStartMinutes: 0,
+      weekdayEndMinutes: 0,
+      weekendStartMinutes: 0,
+      weekendEndMinutes: 0,
     }
     // Midday in June is definitely day.
     expect(isNightNow(at('2026-06-21T13:00:00'), schedule)).toBe(false)
@@ -116,6 +137,13 @@ describe('nextBoundary', () => {
       endMinutes: 7 * 60,
       latitude: 0,
       longitude: 0,
+      keyframes: [],
+      weekdayScheduleEnabled: false,
+      weekendScheduleEnabled: false,
+      weekdayStartMinutes: 0,
+      weekdayEndMinutes: 0,
+      weekendStartMinutes: 0,
+      weekendEndMinutes: 0,
     }
     expect(nextBoundary(at('2024-01-01T12:00:00'), schedule).ms).toBe(Infinity)
   })
@@ -128,6 +156,13 @@ describe('nextBoundary', () => {
       endMinutes: 7 * 60,
       latitude: 0,
       longitude: 0,
+      keyframes: [],
+      weekdayScheduleEnabled: false,
+      weekendScheduleEnabled: false,
+      weekdayStartMinutes: 0,
+      weekdayEndMinutes: 0,
+      weekendStartMinutes: 0,
+      weekendEndMinutes: 0,
     }
     const atNoon = nextBoundary(at('2024-01-01T12:00:00'), schedule)
     expect(atNoon.ms).toBe(10 * 60 * 60 * 1000) // next start at 22:00

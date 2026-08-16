@@ -24,23 +24,27 @@ export function GeneralPanel({ settings, patchSettings, setMode, resetSettings, 
           <ToggleSwitch checked={settings.enabled} label="Enabled" onChange={(v) => void patchSettings({ enabled: v })} />
         </Row>
         <div className="mt-2 flex gap-2" role="radiogroup" aria-label="Theme mode">
-          {MODE_ORDER.map((m) => (
-            <button
-              key={m}
-              type="button"
-              role="radio"
-              aria-checked={settings.mode === m}
-              title={MODE_PRESETS[m].description}
-              onClick={() => void setMode(m)}
-              className={`rounded-lg border px-3 py-1.5 text-xs font-medium capitalize transition-colors focus-visible:outline-2 focus-visible:outline-indigo-400 ${
-                settings.mode === m
-                  ? 'border-indigo-400/70 bg-indigo-500/15 text-indigo-200'
-                  : 'border-slate-700 text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              {MODE_PRESETS[m].label}
-            </button>
-          ))}
+          {MODE_ORDER.map((m) => {
+            const label = m === 'custom' ? 'Custom' : MODE_PRESETS[m].label
+            const desc = m === 'custom' ? 'Custom Theme Studio preset' : MODE_PRESETS[m].description
+            return (
+              <button
+                key={m}
+                type="button"
+                role="radio"
+                aria-checked={settings.mode === m}
+                title={desc}
+                onClick={() => void setMode(m)}
+                className={`rounded-lg border px-3 py-1.5 text-xs font-medium capitalize transition-colors focus-visible:outline-2 focus-visible:outline-indigo-400 ${
+                  settings.mode === m
+                    ? 'border-indigo-400/70 bg-indigo-500/15 text-indigo-200'
+                    : 'border-slate-700 text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                {label}
+              </button>
+            )
+          })}
         </div>
       </Section>
 
