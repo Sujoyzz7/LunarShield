@@ -27,7 +27,7 @@ export const MODE_PRESETS: Record<Mode, ModePreset> = {
   night: {
     label: 'Night',
     description: 'Warm night-shift tint that is easier on the eyes.',
-    params: { temperature: 3400, brightness: 0.94, contrast: 0.96, sepia: 0.22 },
+    params: { temperature: 3200, brightness: 0.92, contrast: 0.98, sepia: 0.25 },
   },
   oled: {
     label: 'OLED',
