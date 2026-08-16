@@ -32,12 +32,11 @@ describe('resolveTheme', () => {
   it('respects an active schedule', () => {
     const settings = createDefaultSettings()
     settings.schedule = {
+      ...settings.schedule,
       enabled: true,
       mode: 'fixed',
       startMinutes: 22 * 60,
       endMinutes: 7 * 60,
-      latitude: 0,
-      longitude: 0,
     }
     const resolved = resolveTheme(settings, [], 'example.com', noon)
     expect(resolved.active).toBe(false)

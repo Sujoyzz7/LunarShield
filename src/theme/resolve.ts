@@ -53,9 +53,20 @@ export function resolveTheme(
 
   const strategy = rule?.strategy ?? settings.strategy
   const mode = rule?.mode ?? settings.mode
-  // Site-level mode overrides pull that mode's preset; otherwise the user's
-  // fine-tuned slider values apply.
-  const params = rule?.mode ? MODE_PRESETS[rule.mode].params : settings
+  // Site-level mode overrides pull that mode's preset (if standard); otherwise the user's
+  // fine-tuned slider values apply with site rule overrides.
+  let params: FilterParams = settings
+  if (rule?.mode && rule.mode !== 'custom') {
+    params = MODE_PRESETS[rule.mode].params
+  }
+  if (rule?.temperature !== undefined || rule?.brightness !== undefined || rule?.contrast !== undefined) {
+    params = {
+      temperature: rule.temperature ?? params.temperature,
+      brightness: rule.brightness ?? params.brightness,
+      contrast: rule.contrast ?? params.contrast,
+      sepia: params.sepia,
+    }
+  }
 
   return { active, reason, rule, strategy, mode, params }
 }

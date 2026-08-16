@@ -44,7 +44,7 @@ export default function App() {
 
       <section className="flex flex-col gap-2.5 rounded-xl border border-slate-800 bg-slate-900/60 p-3">
         <SliderRow
-          label="Temp"
+          label="Warmth"
           min={LIMITS.temperature.min}
           max={LIMITS.temperature.max}
           step={100}
@@ -73,6 +73,33 @@ export default function App() {
           disabled={!settings.enabled}
           onChange={(v) => void patchSettings({ contrast: v })}
         />
+      </section>
+
+      <section className="grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          onClick={() => void patchSettings({ smartMode: !settings.smartMode })}
+          className={`flex items-center justify-between rounded-xl border px-3 py-2 text-xs font-semibold transition ${
+            settings.smartMode
+              ? 'border-indigo-500/50 bg-indigo-500/10 text-indigo-300'
+              : 'border-slate-800 bg-slate-900/40 text-slate-400'
+          }`}
+        >
+          <span>🧠 Smart Mode</span>
+          <span>{settings.smartMode ? 'ON' : 'OFF'}</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => void patchSettings({ imageProtection: !settings.imageProtection })}
+          className={`flex items-center justify-between rounded-xl border px-3 py-2 text-xs font-semibold transition ${
+            settings.imageProtection
+              ? 'border-indigo-500/50 bg-indigo-500/10 text-indigo-300'
+              : 'border-slate-800 bg-slate-900/40 text-slate-400'
+          }`}
+        >
+          <span>🖼 Images</span>
+          <span>{settings.imageProtection ? 'ON' : 'OFF'}</span>
+        </button>
       </section>
 
       <SitePanel

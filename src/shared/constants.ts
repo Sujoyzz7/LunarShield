@@ -8,9 +8,12 @@ export const SCHEMA_VERSION = 1
 export const STORAGE_KEYS = {
   settings: 'ls_settings',
   rules: 'ls_rules',
+  customThemes: 'ls_custom_themes',
+  stats: 'ls_stats',
+  customCss: 'ls_custom_css',
 } as const
 
-export const MODE_ORDER: readonly Mode[] = ['dark', 'night', 'oled']
+export const MODE_ORDER: readonly Mode[] = ['dark', 'night', 'oled', 'custom']
 
 export interface ModePreset {
   label: string
@@ -18,7 +21,7 @@ export interface ModePreset {
   params: FilterParams
 }
 
-export const MODE_PRESETS: Record<Mode, ModePreset> = {
+export const MODE_PRESETS: Record<Exclude<Mode, 'custom'>, ModePreset> = {
   dark: {
     label: 'Dark',
     description: 'Balanced dark theme for any screen.',
@@ -35,6 +38,69 @@ export const MODE_PRESETS: Record<Mode, ModePreset> = {
     params: { temperature: 5000, brightness: 0.92, contrast: 1.05, sepia: 0.0 },
   },
 }
+
+export const PRESET_THEMES = [
+  {
+    id: 'midnight',
+    name: 'Midnight Blue',
+    colors: { background: '#07111F', surface: '#0D1B2A', text: '#E6EDF3', mutedText: '#8B9AAA', accent: '#6EA8FE' },
+    params: { temperature: 5500, brightness: 0.92, contrast: 1.05, sepia: 0.15 },
+  },
+  {
+    id: 'amoled',
+    name: 'AMOLED',
+    colors: { background: '#000000', surface: '#121212', text: '#FFFFFF', mutedText: '#A0A0A0', accent: '#3B82F6' },
+    params: { temperature: 6500, brightness: 0.90, contrast: 1.10, sepia: 0.00 },
+  },
+  {
+    id: 'solarized-dark',
+    name: 'Solarized Dark',
+    colors: { background: '#002B36', surface: '#073642', text: '#839496', mutedText: '#586E75', accent: '#268BD2' },
+    params: { temperature: 4500, brightness: 0.95, contrast: 1.00, sepia: 0.10 },
+  },
+  {
+    id: 'dracula',
+    name: 'Dracula',
+    colors: { background: '#282A36', surface: '#44475A', text: '#F8F8F2', mutedText: '#6272A4', accent: '#BD93F9' },
+    params: { temperature: 5000, brightness: 0.95, contrast: 1.05, sepia: 0.05 },
+  },
+  {
+    id: 'nord',
+    name: 'Nord',
+    colors: { background: '#2E3440', surface: '#3B4252', text: '#ECEFF4', mutedText: '#D8DEE9', accent: '#88C0D0' },
+    params: { temperature: 5800, brightness: 0.96, contrast: 1.00, sepia: 0.00 },
+  },
+  {
+    id: 'one-dark',
+    name: 'One Dark',
+    colors: { background: '#21252B', surface: '#282C34', text: '#ABB2BF', mutedText: '#5C6370', accent: '#61AFEF' },
+    params: { temperature: 5200, brightness: 0.94, contrast: 1.02, sepia: 0.02 },
+  },
+  {
+    id: 'cyberpunk',
+    name: 'Cyberpunk',
+    colors: { background: '#0D0814', surface: '#1A102B', text: '#00F0FF', mutedText: '#7000FF', accent: '#FF0055' },
+    params: { temperature: 6000, brightness: 1.00, contrast: 1.15, sepia: 0.00 },
+  },
+  {
+    id: 'ocean',
+    name: 'Ocean',
+    colors: { background: '#0F172A', surface: '#1E293B', text: '#F8FAFC', mutedText: '#64748B', accent: '#38BDF8' },
+    params: { temperature: 5600, brightness: 0.95, contrast: 1.05, sepia: 0.05 },
+  },
+  {
+    id: 'sepia',
+    name: 'Sepia Warmth',
+    colors: { background: '#2D261E', surface: '#3D342A', text: '#E8D8C8', mutedText: '#A89888', accent: '#D97706' },
+    params: { temperature: 3000, brightness: 0.90, contrast: 0.95, sepia: 0.50 },
+  },
+  {
+    id: 'reading-mode',
+    name: 'Reading Mode',
+    colors: { background: '#191919', surface: '#242424', text: '#DDDDDD', mutedText: '#888888', accent: '#10B981' },
+    params: { temperature: 4000, brightness: 0.88, contrast: 0.95, sepia: 0.20 },
+  },
+] as const
 
 export const LIMITS = {
   temperature: { min: 2000, max: 6500 },

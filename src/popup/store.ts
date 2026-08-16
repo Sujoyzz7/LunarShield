@@ -70,9 +70,13 @@ export const usePopupStore = create<PopupStore>((set, get) => ({
   },
 
   async setMode(mode: Mode) {
+    const patch: Partial<Settings> = { mode }
+    if (mode !== 'custom') {
+      Object.assign(patch, MODE_PRESETS[mode].params)
+    }
     const next = await rpc<Settings>({
       type: 'SET_SETTINGS',
-      patch: { mode, ...MODE_PRESETS[mode].params },
+      patch,
     })
     set({ settings: next })
   },

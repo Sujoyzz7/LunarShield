@@ -9,6 +9,8 @@ import { ImageProtection } from './image-protection'
 import { resolveTheme, type ResolvedTheme } from './resolve'
 import { ShadowController } from './shadow-dom'
 import { getStrategy } from './strategies'
+import { ReadingEngine } from './reading-mode'
+import { applyCustomCss } from './custom-css'
 
 /**
  * Runs inside content scripts (document_start). Loads state, resolves the
@@ -23,6 +25,7 @@ export class ThemeEngine {
 
   private shadowController: ShadowController | null = null
   private imageProtection: ImageProtection | null = null
+  private readingEngine: ReadingEngine | null = null
   private domObserver: MutationObserver | null = null
   private boundaryTimer: number | null = null
   private disposed = false
@@ -96,8 +99,8 @@ export class ThemeEngine {
       return
     }
 
-    const hostname = this.ctx.location.hostname
-    const resolved = resolveTheme(settings, this.rules, hostname, new Date())
+    const targetUrl = this.ctx.location.href
+    const resolved = resolveTheme(settings, this.rules, targetUrl, new Date())
 
     // On-device detection: skip pages that already look dark (when enabled).
     if (resolved.active && settings.autoDetect) {
@@ -127,6 +130,20 @@ export class ThemeEngine {
     strategy.apply(ctx)
     this.syncStrategyStyles()
 
+    // Apply custom per-site CSS if specified in rule
+    if (resolved.rule?.customCss) {
+      applyCustomCss(resolved.rule.customCss, this.ctx.document)
+    }
+
+    // Reading mode
+    const readingEnabled = resolved.rule?.readingModeEnabled ?? settings.readingMode.enabled
+    if (readingEnabled) {
+      if (!this.readingEngine) this.readingEngine = new ReadingEngine()
+      this.readingEngine.apply(settings.readingMode, this.ctx.document)
+    } else {
+      this.readingEngine?.remove(this.ctx.document)
+    }
+
     // Shadow roots share the strategy stylesheet.
     if (!this.shadowController) {
       this.shadowController = new ShadowController(this.ctx.document, () => this.strategyCss())
@@ -136,7 +153,8 @@ export class ThemeEngine {
     }
 
     // Image protection only makes sense under the filter strategy.
-    if (settings.imageProtection && resolved.strategy === 'filter') {
+    const imageProtActive = resolved.rule?.imageProtection ?? settings.imageProtection
+    if (imageProtActive && resolved.strategy === 'filter') {
       if (!this.imageProtection) {
         this.imageProtection = new ImageProtection(this.ctx.document)
         this.imageProtection.start()
