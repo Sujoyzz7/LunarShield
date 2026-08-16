@@ -1,7 +1,11 @@
 import { test as base, chromium, type BrowserContext } from '@playwright/test'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 /* eslint-disable react-hooks/rules-of-hooks */
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 /**
  * Playwright fixture that loads the built extension.
@@ -9,8 +13,9 @@ import path from 'node:path'
  * - `channel: 'chromium'` is required for headless extension loading.
  * - The extension ID is dynamic, so we read it from the service worker URL.
  */
+/* eslint-disable no-empty-pattern */
 export const test = base.extend<{ context: BrowserContext; extensionId: string }>({
-  context: async (_, use) => {
+  context: async ({}, use) => {
     const pathToExtension = path.join(__dirname, '..', 'dist')
     const context = await chromium.launchPersistentContext('', {
       channel: 'chromium',
