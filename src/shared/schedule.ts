@@ -101,12 +101,8 @@ export function nextBoundary(now: Date, schedule: Schedule): Boundary {
 
   let best: { ms: number; minutes: number } | null = null
   for (const minutes of boundaries) {
-    let delta = minutes - current
-    let dayOffset = 0
-    if (delta <= 0) {
-      delta += 24 * 60
-      dayOffset = 1
-    }
+    const delta = minutes - current
+    const dayOffset = delta <= 0 ? 1 : 0
     const ms = todayStart + minutesToMs(minutes) + dayOffset * 86_400_000 - now.getTime()
     if (!best || ms < best.ms) best = { ms, minutes }
   }
